@@ -1,26 +1,65 @@
+import { useState, useEffect } from 'react'
 import books from '../books.json'
 import Book from './Book'
 
 const { library } = books
 
 export default function Library () {
+  const [filteredBooks, setFilteredBooks] = useState(library)
+  const [filter, setFilter] = useState('All')
+
+  useEffect(() => {
+    if (filter === 'All') {
+      setFilteredBooks(library)
+    } else {
+      setFilteredBooks(library.filter(library => library.book.genre === filter))
+    }
+  }, [filter])
+
   return (
-    <section className='flex flex-row justify-center'>
-      <div className='flex h-max flex-col gap-8 py-8'>
-        <div className='flex flex-wrap justify-center gap-8'>
-          {library.map((library) => <Book key={library.book.ISBN} book={library.book} />)}
+    <section className='flex flex-col justify-center'>
+      <div className='bg-[#151515] h-24 justify-center items-center flex'>
+        <div className='flex flex-row justify-center gap-4 text-lg w-screen'>
+          <p>Filtrar por género</p>
+          <select
+            id='genre'
+            value={filter}
+            className='text-center'
+            onChange={(e) => setFilter(e.target.value)}
+          >
+            <option value='All'>Todos</option>
+            <option value='Fantasía'>Fantasía</option>
+            <option value='Ciencia ficción'>Ciencia ficción</option>
+            <option value='Zombies'>Zombies</option>
+            <option value='Terror'>Terror</option>
+          </select>
         </div>
       </div>
 
-      <button className='absolute top-4 right-4 rounded-md bg-gray-400 px-6 py-2 text-lg font-medium transition hover:bg-gray-500'>
-        Mi lista: 0 Libros
-      </button>
+      <div className='flex flex-row'>
+        <div className='flex h-max flex-col w-6/12 gap-8 py-8'>
+          <div className='flex flex-wrap flex-col justify-center gap-8'>
+            <h3 className='text-xl'>Libros Disponibles</h3>
+            <div className='flex flex-wrap justify-center gap-8'>
+              {filteredBooks.map((library) =>
+                <Book
+                  key={library.book.ISBN}
+                  book={library.book}
+                />)}
+            </div>
+          </div>
+        </div>
 
-      <div className='flex absolute right-0 h-max overflow-scroll w-6/12 justify-between gap-8 bg-[#D0D0D0] py-8'>
-        <div className='flex flex-col gap-8'>
-          <h3 className='text-xl'>Mi lista de lectura</h3>
-          <div className='flex flex-wrap justify-center gap-8'>
-            {library.map((library) => <Book key={library.book.ISBN} book={library.book} />)}
+        <div className='flex h-max flex-col w-6/12 gap-8 py-8'>
+          <div className='flex flex-wrap flex-col justify-center gap-8'>
+            <h3 className='text-xl'>Mi lista de lectura</h3>
+            <div className='flex flex-wrap justify-center gap-8'>
+              {library.map((library) =>
+                <Book
+                  key={library.book.ISBN}
+                  book={library.book}
+                />)}
+            </div>
           </div>
         </div>
       </div>
