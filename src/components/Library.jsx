@@ -54,11 +54,12 @@ export default function Library () {
           <div className='flex flex-wrap flex-col justify-center gap-8'>
             <h3 className='text-xl'>Mi lista de lectura</h3>
             <div className='flex flex-wrap justify-center gap-8'>
-              {library.map((library) =>
-                <Book
-                  key={library.book.ISBN}
-                  book={library.book}
-                />)}
+              {library.filter(library => library.book.genre === 'Fantasía')
+                .map((library) =>
+                  <Book
+                    key={library.book.ISBN}
+                    book={library.book}
+                  />)}
             </div>
           </div>
         </div>
